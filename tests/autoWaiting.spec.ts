@@ -33,7 +33,7 @@ test('auto waiting',async({page}) => {
     await page.waitForSelector('.bg-success')
 */
     // wait for particular response
-    await page.waitForResponse('http://uitestingplayground.com/ajaxdata')
+    //await page.waitForResponse('http://uitestingplayground.com/ajaxdata')
 
     // wait for network calls to be completed NOT RECOMMENDED
     await page.waitForLoadState('networkidle') // all the calls are done
