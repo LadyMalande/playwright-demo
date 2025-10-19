@@ -9,6 +9,8 @@ import type {TestOptions} from './test-options';
  import * as path from 'path';
  config({ path: path.resolve(__dirname, '.env') });
 
+// Delete everything, that is not relevant to you or your project
+
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -24,39 +26,26 @@ export default defineConfig<TestOptions>({
   expect:{
     timeout: 50000
   },
-
-  testDir: './tests',
-  /* Run tests in files in parallel */
-  fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
-  forbidOnly: !!process.env.CI,
   /* Retry on CI only 2 times, locally zero times*/
-  retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. Rn the playwright should run one new worker per one test file*/
-  workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
+  retries: 1,
   reporter: 'html',
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     // How long the click is waiting for the locator to be filled with element
     actionTimeout: 15000,
 
     /* Base URL to use in actions like `await page.goto('/')`. */
-     baseURL: 'http://localhost:4200/',
     globalQaURL: 'https://globalsqa.com/demo-site/draganddrop/',
-    /*
+    
     baseURL: process.env.DEV === '1' ? 'http://localhost:4200/'
       : process.env.STAGE === '1' ? 'http://localhost:4201/' 
-      : 'http://localhost:4202/',
-      */
+      : 'http://localhost:4200/',
 
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
 
     // The option for recording tests. The test needs to be run from command line, recording when run from UI will not happen
     //video: 'on'
     video: {
-      mode: 'on',
+      mode: 'off',
       size: { width: 1920, height: 1080 }
     }
 
@@ -72,44 +61,13 @@ export default defineConfig<TestOptions>({
     },
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
     },
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { 
+        browserName: 'firefox',
+      },
     },
-
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
   ],
-
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
 });
