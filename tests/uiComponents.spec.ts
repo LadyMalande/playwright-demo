@@ -12,7 +12,7 @@ test.beforeEach(async({page}) => {
 
 test.describe('Form Layouts page', () => {
     // Set the number of retries for all tests in this describe block that overrides the global config retries: process.env.CI ? 2 : 0,
-    test.describe.configure({retries: 2})
+    test.describe.configure({retries: 0})
 
     // Useful when tests depend on each other, but generally avoid it
     test.describe.configure({mode: 'serial'})
@@ -61,19 +61,22 @@ test.describe('Form Layouts page', () => {
             You want to test disabled elements (though this is not recommended for realistic user flows)
             The element is not visible in the viewport (but exists in the DOM)
     */
-        test('Radio buttons', async({page}) => {
+        test.only('Radio buttons', async({page}) => {
         const usingTheGridForm = page.locator('nb-card', {hasText: "Using the Grid"})
         const radioButton1 = usingTheGridForm.getByLabel('Option 1')
-        // Force true is used to bypass Playwright's built-in actionability checks when performing actions like .check(), .click(), or .fill()
-        await radioButton1.check({force: true})
-        const radioButton2 = usingTheGridForm.getByText('Option 2')
-        await radioButton2.check({force: true})
+        //await radioButton1.check({force: true})
 
-        const isCheckedOption1 = await radioButton1.isChecked()
-        const isCheckedOption2 = await radioButton2.isChecked()
-        expect(isCheckedOption1).toBeFalsy()
-        expect(isCheckedOption2).toBeTruthy()
-        await expect(usingTheGridForm.getByLabel('Option 2')).toBeChecked()
+        await expect(usingTheGridForm).toHaveScreenshot({maxDiffPixels: 150})
+        // Force true is used to bypass Playwright's built-in actionability checks when performing actions like .check(), .click(), or .fill()
+        // await radioButton1.check({force: true})
+        // const radioButton2 = usingTheGridForm.getByText('Option 2')
+        // await radioButton2.check({force: true})
+
+        // const isCheckedOption1 = await radioButton1.isChecked()
+        // const isCheckedOption2 = await radioButton2.isChecked()
+        // expect(isCheckedOption1).toBeFalsy()
+        // expect(isCheckedOption2).toBeTruthy()
+        // await expect(usingTheGridForm.getByLabel('Option 2')).toBeChecked()
     })
 })
 

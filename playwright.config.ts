@@ -28,7 +28,12 @@ export default defineConfig<TestOptions>({
   },
   /* Retry on CI only 2 times, locally zero times*/
   retries: 1,
-  reporter: 'html',
+  //reporter: 'html',
+  //reporter: 'list',
+  reporter: [
+    ['json', { outputFile: 'test-results/jsonReport.json' }],
+    ['junit', { outputFile: 'test-results/junitReport.xml' }],
+  ['html']],
   use: {
     // How long the click is waiting for the locator to be filled with element
     actionTimeout: 15000,
@@ -79,6 +84,11 @@ export default defineConfig<TestOptions>({
       use: {
         viewport: { width: 1920, height: 1080 }
       }
-    }
+    },
+    {
+      name: 'mobile',
+      testMatch: 'testMobile.spec.ts',
+      use: { ...devices['iPhone 13 Pro']},
+    },
   ],
 });
