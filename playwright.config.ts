@@ -67,7 +67,18 @@ export default defineConfig<TestOptions>({
       name: 'firefox',
       use: { 
         browserName: 'firefox',
+            video: {
+      mode: 'on',
+      size: { width: 1920, height: 1080 }
+    }
       },
     },
+    {
+      name: 'pageObjectFullScreen',
+      testMatch: 'usePageObjects.spec.ts',
+      use: {
+        viewport: { width: 1920, height: 1080 }
+      }
+    }
   ],
 });

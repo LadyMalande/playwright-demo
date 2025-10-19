@@ -7,6 +7,8 @@ test.beforeEach(async({page}) => {
 
 })
 
+ // Ruuning project using custom configuration file: npx playwright test --config=playwright-prod.config.ts
+
 // To start the application to be tested, run in a separate terminal the command: "npm run start" or "npm start" 
 // To run test manually from the cmd line in chromium: npx playwright test usePageObjects.spec.ts --project=chromium
 
