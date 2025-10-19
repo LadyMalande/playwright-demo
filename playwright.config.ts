@@ -1,20 +1,22 @@
 import { defineConfig, devices } from '@playwright/test';
+import type {TestOptions} from './test-options';
 
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+ import { config } from 'dotenv';
+ import * as path from 'path';
+ config({ path: path.resolve(__dirname, '.env') });
+
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-export default defineConfig({
+export default defineConfig<TestOptions>({
   // Redefine default config for TIMEOUTS
   // Test timeout
-  timeout: 100000,
+  timeout: 60000,
   // Global timeout (for all tests)
   // ACTION timeouts can be set in use here down
   globalTimeout: 60000,
@@ -28,9 +30,9 @@ export default defineConfig({
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
+  /* Retry on CI only 2 times, locally zero times*/
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
+  /* Opt out of parallel tests on CI. Rn the playwright should run one new worker per one test file*/
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
@@ -40,14 +42,34 @@ export default defineConfig({
     actionTimeout: 15000,
 
     /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://localhost:3000',
+     baseURL: 'http://localhost:4200/',
+    globalQaURL: 'https://globalsqa.com/demo-site/draganddrop/',
+    /*
+    baseURL: process.env.DEV === '1' ? 'http://localhost:4200/'
+      : process.env.STAGE === '1' ? 'http://localhost:4201/' 
+      : 'http://localhost:4202/',
+      */
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+
+    // The option for recording tests. The test needs to be run from command line, recording when run from UI will not happen
+    //video: 'on'
+    video: {
+      mode: 'on',
+      size: { width: 1920, height: 1080 }
+    }
+
   },
 
   /* Configure projects for major browsers */
   projects: [
+    {
+      name: 'dev',
+      use: { ...devices['Desktop Chrome'],
+        baseURL: 'http://localhost:4200/',
+       },
+    },
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },

@@ -1,7 +1,8 @@
 import {test, expect} from '@playwright/test'
 
 test.beforeEach(async({page}, testInfo) => {
-    await page.goto('http://uitestingplayground.com/ajax')
+    await page.goto(process.env.URL)
+    console.log('Test env from .env file:' + process.env.URL)
     await page.getByText('Button Triggering AJAX Request').click()
     testInfo.setTimeout(testInfo.timeout + 2000)
 
@@ -9,7 +10,7 @@ test.beforeEach(async({page}, testInfo) => {
 
 test('auto waiting',async({page}) => {
     const successButton = page.locator('.bg-success')
-    //await successButton.click()
+    await successButton.click()
 
     /*
     // Will wait (up to set timeout) for the button to appear to grab the text

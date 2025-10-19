@@ -1,9 +1,9 @@
-import {test, expect} from '@playwright/test'
-
-test('drag and drop with iframe',async({page}, testInfo) => {
-    await page.goto('http://globalsqa.com/demo-site/draganddrop')
+import {expect} from '@playwright/test'
+import {test} from '../test-options'
 
 
+test('drag and drop with iframe', async({page, globalQaURL}) => {
+    await page.goto(globalQaURL)
 
     await page.locator('[class="fc-button fc-cta-consent fc-primary-button"]').getByText("Consent").click()
 

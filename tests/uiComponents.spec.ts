@@ -1,28 +1,41 @@
 
 import {test, expect} from '@playwright/test'
 
+// Configure this describe block (this whole test file) to run tests in parallel
+test.describe.configure({mode: 'parallel'})
+
 test.beforeEach(async({page}) => {
     // Navigate to the base URL before each test    
-    await page.goto('http://localhost:4200/')
+    await page.goto('/')
 
 })
 
 test.describe('Form Layouts page', () => {
+    // Set the number of retries for all tests in this describe block that overrides the global config retries: process.env.CI ? 2 : 0,
+    test.describe.configure({retries: 2})
+
+    // Useful when tests depend on each other, but generally avoid it
+    test.describe.configure({mode: 'serial'})
 
     test.beforeEach(async({page}) => {
         await page.getByText('Forms').click()
         await page.getByText('Form Layouts').click()
     })
 
-    test('input fields', async({page}) => {
+    test('input fields', async({page}, testInfo) => {
+        if(testInfo.retry){
+           // Do something special on retry 
+        }
         const usingTheGridEmailInput = page.locator('nb-card', {hasText: "Using the Grid"}).getByRole('textbox', {name: "Email"})
 
         // Cannot be chained
         await usingTheGridEmailInput.fill('test@test.com')
         await usingTheGridEmailInput.clear()
         // Press the input keys one by one with given delay to simulate real user interaction (delay between key strokes)
-        await usingTheGridEmailInput.pressSequentially('test2@test.com', {delay: 200})
-
+        // With delay for normal run
+        // await usingTheGridEmailInput.pressSequentially('test2@test.com', {delay: 200})
+        // Without delay for parallel runs
+        await usingTheGridEmailInput.pressSequentially('test2@test.com')
         // generic assertion
         const inputValue = await usingTheGridEmailInput.inputValue()
         expect(inputValue).toEqual('test2@test.com')
