@@ -32,6 +32,19 @@ export default defineConfig<TestOptions>({
   //reporter: 'html',
   //reporter: 'list',
   reporter: [
+    // Use "dot" reporter on CI, "list" otherwise (Playwright default).
+    process.env.CI ? ["dot"] : ["list"],
+    // Add Argos reporter.
+    [
+      "@argos-ci/playwright/reporter",
+      {
+        // Upload to Argos on CI only.
+        uploadToArgos: !!process.env.CI,
+
+        // Set your Argos token (required if not using GitHub Actions).
+        // token: "<YOUR-ARGOS-TOKEN>",
+      },
+    ],
     ['json', { outputFile: 'test-results/jsonReport.json' }],
     ['junit', { outputFile: 'test-results/junitReport.xml' }],
   ['html']],
@@ -47,8 +60,10 @@ export default defineConfig<TestOptions>({
       : 'http://localhost:4200/',
 
     trace: 'on-first-retry',
-
+    // Capture screenshot after each test failure.
+    screenshot: "only-on-failure",
     // The option for recording tests. The test needs to be run from command line, recording when run from UI will not happen
+    
     //video: 'on'
     video: {
       mode: 'off',
