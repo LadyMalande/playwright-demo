@@ -18,10 +18,11 @@ import type {TestOptions} from './test-options';
 export default defineConfig<TestOptions>({
   // Redefine default config for TIMEOUTS
   // Test timeout
-  timeout: 60000,
+  // timeout: 60000,
   // Global timeout (for all tests)
   // ACTION timeouts can be set in use here down
-  globalTimeout: 60000,
+  // Comment global timeout for running in docker
+  //globalTimeout: 60000,
   // Timeout for expects
   expect:{
     timeout: 50000
@@ -91,4 +92,10 @@ export default defineConfig<TestOptions>({
       use: { ...devices['iPhone 13 Pro']},
     },
   ],
+
+  webServer: {
+    command: 'npm run start',
+    url: 'http://localhost:4200',
+    timeout: 180000, // 3 minutes
+  }
 });
